@@ -1,0 +1,18 @@
+node_modules/
+dist/
+build/
+
+# Variables d'environnement : JAMAIS sur GitHub
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# Systeme / editeurs
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

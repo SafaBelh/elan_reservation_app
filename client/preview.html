@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500;1,600;1,700;1,800&display=swap"
+      rel="stylesheet"
+    />
+    <title>Preview</title>
+  </head>
+  <body>
+    <script>
+      const p = new URLSearchParams(location.search);
+      const v = p.get('v') || 'guest';
+      const admin = ['admin', 'rdv', 'services', 'clients'].includes(v);
+      if (admin) {
+        localStorage.setItem('user', JSON.stringify({ _id: '6af3619b8a5574f348d586e0', name: 'Amina Ben Salah', email: 'admin@elan.tn', phone: '+216 20 000 000', role: 'admin' }));
+        localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhZjM2MTliOGE1NTc0ZjM0OGQ1ODZlMCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc5NDM0MDkyNCwiZXhwIjoxNzk0NDI3MzI0fQ.5VzWAsIJDCOVRIfFZ8oWojrGDRem3Wuq97_ae4v2JC0');
+      } else if (v === 'client') {
+        localStorage.setItem('user', JSON.stringify({ _id: '6af3619b8a5574f348d586e2', name: 'Aya Ben Amor', email: 'client@elan.tn', phone: '+216 22 111 222', role: 'client' }));
+        localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhZjM2MTliOGE1NTc0ZjM0OGQ1ODZlMiIsInJvbGUiOiJjbGllbnQiLCJpYXQiOjE3OTQzNDA5MjQsImV4cCI6MTc5NDQyNzMyNH0.GlGErwPkp1Spi4q8hd7d3dBEJQWWdxt5o1MKyEsagc0');
+      } else {
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+      }
+    </script>
+    <div id="root"></div>
+    <script type="module" src="/preview.jsx"></script>
+  </body>
+</html>

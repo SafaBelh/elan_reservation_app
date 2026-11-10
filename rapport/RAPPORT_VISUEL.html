@@ -1,0 +1,1465 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Élan — Mini rapport visuel (MERN)</title>
+<style>
+  @page { size: A4; margin: 0; }
+
+  :root {
+    --cream: #faf6ef;
+    --sand: #f2e9db;
+    --ink: #1e2a24;
+    --muted: #6b7a72;
+    --green: #1f4d3d;
+    --green2: #2f6b56;
+    --terra: #c4694a;
+    --gold: #d9a441;
+    --line: #e4dbcc;
+    --danger: #b3402f;
+    --ok: #2f7a5a;
+  }
+
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: #e7e2d8;
+    color: var(--ink);
+    font-family: 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
+    font-size: 9.2pt;
+    line-height: 1.5;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto 8mm;
+    padding: 12mm 14mm 11mm;
+    background: #fff;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .18);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .page:not(:last-child) { page-break-after: always; }
+
+  @media print {
+    body { background: #fff; }
+    .page { margin: 0; box-shadow: none; }
+  }
+
+  h1, h2, h3, h4 { font-family: Georgia, 'Times New Roman', serif; margin: 0; line-height: 1.15; }
+  h2 { font-size: 16pt; letter-spacing: -.01em; }
+  h3 { font-size: 10.5pt; }
+  p { margin: 0; }
+
+  .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: .18em;
+    font-size: 6.4pt;
+    font-weight: 700;
+    color: var(--terra);
+    margin-bottom: 2.5mm;
+  }
+
+  .lead { color: var(--muted); font-size: 8.8pt; max-width: 66ch; }
+
+  .p-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 2.2mm;
+    margin-bottom: 5mm;
+    font-size: 6.4pt;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    color: var(--muted);
+    font-weight: 700;
+  }
+
+  .p-head .p-num { color: var(--green); }
+
+  .p-foot {
+    margin-top: auto;
+    padding-top: 3mm;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    font-size: 6.2pt;
+    color: var(--muted);
+    letter-spacing: .06em;
+  }
+
+  /* ---------- blocs ---------- */
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm; }
+  .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3mm; }
+
+  .card {
+    border: 1px solid var(--line);
+    border-radius: 4mm;
+    padding: 4mm;
+    background: #fff;
+  }
+
+  .card.tint { background: var(--cream); }
+  .card.dark { background: var(--green); color: #eef3ee; border-color: var(--green); }
+  .card.dark h3 { color: #fff; }
+  .card.dark .card-sub { color: #c3d3c6; }
+
+  .card-sub { font-size: 7.6pt; color: var(--muted); margin-top: 1mm; }
+
+  .badge {
+    display: inline-block;
+    font-size: 6.2pt;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    padding: .6mm 2mm;
+    border-radius: 99px;
+  }
+  .badge.g { background: #e6f2ea; color: var(--ok); }
+  .badge.o { background: #fbf0d8; color: #8a6414; }
+  .badge.r { background: #fbe9e5; color: var(--danger); }
+  .badge.b { background: #e7edf3; color: #35506e; }
+
+  .kpi { display: flex; gap: 3mm; }
+  .kpi div {
+    flex: 1;
+    border-left: 3px solid var(--green);
+    padding-left: 3mm;
+  }
+  .kpi b { display: block; font-family: Georgia, serif; font-size: 15pt; line-height: 1; }
+  .kpi span { font-size: 7pt; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+
+  .rules { counter-reset: r; display: grid; gap: 1.6mm; }
+  .rules li {
+    list-style: none;
+    counter-increment: r;
+    position: relative;
+    padding-left: 8mm;
+    font-size: 8.4pt;
+    line-height: 1.45;
+  }
+  .rules li::before {
+    content: counter(r);
+    position: absolute;
+    left: 0; top: .3mm;
+    background: var(--sand);
+    color: var(--green);
+    font-weight: 800;
+    font-size: 7pt;
+    width: 5.2mm; height: 5.2mm;
+    border-radius: 50%;
+    display: grid; place-items: center;
+  }
+
+  table.t {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 7.8pt;
+  }
+  table.t th {
+    text-align: left;
+    background: var(--sand);
+    color: var(--green);
+    font-size: 6.4pt;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    padding: 1.6mm 2mm;
+  }
+  table.t td { padding: 1.35mm 2mm; border-top: 1px solid var(--line); vertical-align: top; }
+  table.t tr:nth-child(even) td { background: #fcfaf6; }
+  code, .mono { font-family: 'Consolas', 'Courier New', monospace; font-size: 7.4pt; }
+  code { background: #f4efe4; padding: .3mm 1.2mm; border-radius: 1mm; color: #7a3d22; }
+
+  pre {
+    background: #1f2b26;
+    color: #dfe8e1;
+    padding: 3mm 3.5mm;
+    border-radius: 3mm;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 7.2pt;
+    line-height: 1.5;
+    margin: 0;
+    overflow: hidden;
+  }
+  pre .c { color: #8fa79a; }
+  pre .k { color: #e3b341; }
+  pre .s { color: #9ed3a8; }
+
+  /* ---------- SVG ---------- */
+  svg text { font-family: 'Segoe UI', system-ui, Arial, sans-serif; fill: var(--ink); }
+  .s-lbl { font-size: 6.6px; fill: #6b7a72; letter-spacing: .14em; font-weight: 700; }
+  .s-b { font-size: 11px; font-weight: 700; }
+  .s-t { font-size: 9.5px; }
+  .s-s { font-size: 8px; fill: #6b7a72; }
+  .s-m { font-size: 7.6px; fill: #3f4c45; }
+  .s-w { font-size: 9px; fill: #ffffff; font-weight: 700; }
+
+  .legend {
+    display: flex;
+    gap: 5mm;
+    flex-wrap: wrap;
+    font-size: 7pt;
+    color: var(--muted);
+    margin-top: 2.5mm;
+  }
+  .legend i {
+    display: inline-block;
+    width: 6mm; height: 0;
+    border-top: 2px solid var(--green);
+    vertical-align: middle;
+    margin-right: 1.5mm;
+  }
+  .legend i.dash { border-top: 2px dashed #9aa79f; }
+  .legend i.ref { border-top: 2px solid var(--terra); }
+
+  /* ---------- timeline ---------- */
+  .tl { position: relative; padding-left: 7mm; }
+  .tl::before {
+    content: '';
+    position: absolute;
+    left: 2.2mm; top: 2mm; bottom: 2mm;
+    width: 1.5px;
+    background: var(--line);
+  }
+  .tl-item { position: relative; margin-bottom: 2.5mm; }
+  .tl-item:last-child { margin-bottom: 0; }
+  .tl-num {
+    position: absolute;
+    left: -7mm; top: 0;
+    width: 4.6mm; height: 4.6mm;
+    border-radius: 50%;
+    background: var(--green);
+    color: #fff;
+    font-size: 6.4pt;
+    font-weight: 800;
+    display: grid; place-items: center;
+  }
+  .tl-item h4 { font-size: 8.6pt; font-family: 'Segoe UI', sans-serif; font-weight: 700; }
+  .tl-item p { font-size: 7.6pt; color: var(--muted); }
+  .tl-item .api { color: var(--terra); font-family: Consolas, monospace; font-size: 7.2pt; }
+</style>
+</head>
+<body>
+
+<!-- ============================ PAGE 1 — COUVERTURE ============================ -->
+<section class="page" style="padding:0; overflow:hidden;">
+  <div style="background:var(--green); color:#eef3ee; padding:20mm 16mm 14mm; position:relative;">
+    <div style="position:absolute; width:70mm; height:70mm; border-radius:50%; background:rgba(217,164,65,.22); right:-18mm; top:-18mm;"></div>
+    <div style="position:relative;">
+      <div class="eyebrow" style="color:#d9a441;">Projet MERN · École Polytechnique de Sousse</div>
+      <h1 style="font-size:34pt; color:#fff; letter-spacing:-.02em;">
+        Élan
+      </h1>
+      <p style="font-family:Georgia,serif; font-style:italic; font-size:14pt; color:#d7e3d8; margin-top:2mm;">
+        Gestion des rendez-vous d'un coach de vie
+      </p>
+      <p style="font-size:9pt; color:#b9cbbd; margin-top:6mm; max-width:95mm;">
+        Application web MERN : espace client, panneau d'administration,
+        authentification JWT et base MongoDB Atlas.
+      </p>
+    </div>
+  </div>
+
+  <div style="padding:10mm 16mm; display:flex; flex-direction:column; flex:1;">
+    <div class="grid3" style="margin-bottom:8mm;">
+      <div class="card tint">
+        <div class="eyebrow" style="margin-bottom:1mm;">Modèles</div>
+        <b style="font-family:Georgia,serif; font-size:20pt;">4</b>
+        <p class="card-sub">User · Service · RendezVous · Avis</p>
+      </div>
+      <div class="card tint">
+        <div class="eyebrow" style="margin-bottom:1mm;">Routes REST</div>
+        <b style="font-family:Georgia,serif; font-size:20pt;">20</b>
+        <p class="card-sub">dont 13 protégées par JWT</p>
+      </div>
+      <div class="card tint">
+        <div class="eyebrow" style="margin-bottom:1mm;">Slices Redux</div>
+        <b style="font-family:Georgia,serif; font-size:20pt;">5</b>
+        <p class="card-sub">auth · rdv · services · avis · ui</p>
+      </div>
+    </div>
+
+    <h3 style="margin-bottom:3mm;">Sommaire</h3>
+    <table class="t">
+      <tr><td style="width:12mm; color:var(--terra); font-weight:800;">02</td><td>Contexte, acteurs et règles de gestion</td></tr>
+      <tr><td style="color:var(--terra); font-weight:800;">03</td><td>Architecture en trois couches (diagramme)</td></tr>
+      <tr><td style="color:var(--terra); font-weight:800;">04</td><td>Base de données : modèle entité-relation</td></tr>
+      <tr><td style="color:var(--terra); font-weight:800;">05</td><td>Sécurité : flux JWT de bout en bout</td></tr>
+      <tr><td style="color:var(--terra); font-weight:800;">06</td><td>Parcours de réservation et cycle de vie</td></tr>
+      <tr><td style="color:var(--terra); font-weight:800;">07</td><td>L'application en images — espace public</td></tr>
+      <tr><td style="color:var(--terra); font-weight:800;">08</td><td>L'application en images — admin et déploiement</td></tr>
+    </table>
+
+    <div style="margin-top:auto; padding-top:8mm;">
+      <div class="grid2" style="font-size:8pt;">
+        <div>
+          <p style="color:var(--muted); font-size:6.6pt; text-transform:uppercase; letter-spacing:.12em; font-weight:700;">Réalisé par</p>
+          <p style="font-weight:700;">[Nom Prénom] — Groupe Décalé 2026-2027</p>
+          <p style="color:var(--muted); font-size:6.6pt; text-transform:uppercase; letter-spacing:.12em; font-weight:700; margin-top:3mm;">Encadrant</p>
+          <p style="font-weight:700;">Dr. Abdelweheb GUEDDES</p>
+        </div>
+        <div>
+          <p style="color:var(--muted); font-size:6.6pt; text-transform:uppercase; letter-spacing:.12em; font-weight:700;">Dépôt GitHub</p>
+          <p class="mono" style="font-size:7.4pt;">github.com/[compte]/coach-rendez-vous</p>
+          <p style="color:var(--muted); font-size:6.6pt; text-transform:uppercase; letter-spacing:.12em; font-weight:700; margin-top:3mm;">Application en ligne</p>
+          <p class="mono" style="font-size:7.4pt;">[projet].vercel.app · API Render</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ PAGE 2 — CONTEXTE ============================ -->
+<section class="page">
+  <div class="p-head"><span>Élan · Mini rapport visuel</span><span class="p-num">02 / 08</span></div>
+
+  <div class="eyebrow">Contexte</div>
+  <h2>Le problème et la réponse apportée</h2>
+  <p class="lead" style="margin-top:3mm;">
+    Un coach de vie gère aujourd'hui ses rendez-vous par téléphone et messagerie : doubles
+    réservations, oublis, aucune visibilité sur son activité. L'application permet au client
+    de réserver seul un créneau, et au coach de piloter son planning depuis un espace
+    d'administration.
+  </p>
+
+  <div class="grid3" style="margin-top:6mm;">
+    <div class="card">
+      <span class="badge b">Lecture seule</span>
+      <h3 style="margin-top:2.5mm;">Visiteur</h3>
+      <p class="card-sub">
+        Consulte les prestations, les créneaux déjà occupés et les témoignages.
+        Peut s'inscrire ou se connecter. Toute action d'écriture le renvoie
+        vers le formulaire de connexion.
+      </p>
+      <p style="margin-top:2.5mm; font-size:7pt; color:var(--terra);" class="mono">
+        GET /services · GET /rendezvous/disponibilites · GET /avis
+      </p>
+    </div>
+
+    <div class="card">
+      <span class="badge g">Connecté · JWT</span>
+      <h3 style="margin-top:2.5mm;">Client</h3>
+      <p class="card-sub">
+        Réserve un créneau, consulte son historique, annule une demande encore
+        en attente, et dépose un avis après une séance terminée.
+      </p>
+      <p style="margin-top:2.5mm; font-size:7pt; color:var(--terra);" class="mono">
+        POST /rendezvous · GET /mes-rendez-vous · PUT /:id · POST /avis
+      </p>
+    </div>
+
+    <div class="card dark">
+      <span class="badge o">RBAC · adminOnly</span>
+      <h3 style="margin-top:2.5mm;">Administrateur / coach</h3>
+      <p class="card-sub">
+        Tableau de bord (compteurs, chiffre d'affaires), validation et changement
+        de statut des demandes, CRUD des prestations, liste des comptes.
+      </p>
+      <p style="margin-top:2.5mm; font-size:7pt; color:#e9c98a;" class="mono">
+        GET /rendezvous · GET /stats · POST-PUT-DELETE /services
+      </p>
+    </div>
+  </div>
+
+  <div class="grid2" style="margin-top:6mm; align-items:start;">
+    <div>
+      <div class="eyebrow">Règles de gestion</div>
+      <ol class="rules">
+        <li>Un créneau <span class="mono">date + heure</span> ne peut être réservé que par un seul rendez-vous actif.</li>
+        <li>Un rendez-vous doit être <b>dans le futur</b> et porter sur une prestation <b>active</b>.</li>
+        <li>Un client ne peut annuler que sa propre demande, et seulement si elle est <span class="mono">en_attente</span>.</li>
+        <li>Un avis n'est possible qu'après une séance <span class="mono">termine</span>, une seule fois, par le client concerné.</li>
+        <li>Une prestation liée à au moins un rendez-vous <b>ne peut pas être supprimée</b>.</li>
+      </ol>
+    </div>
+
+    <div class="card tint">
+      <div class="eyebrow">Chiffres clés du projet</div>
+      <div class="kpi" style="margin-top:3mm;">
+        <div><b>15</b><span>composants</span></div>
+        <div><b>4</b><span>relations 1:N</span></div>
+        <div><b>1</b><span>SPA · 3 vues</span></div>
+      </div>
+      <p class="card-sub" style="margin-top:4mm;">
+        Le panneau d'administration n'est pas une seconde application : c'est une
+        <b>vue</b> de la même SPA, affichée uniquement si <span class="mono">user.role === 'admin'</span>.
+        Le serveur revérifie ce rôle à chaque requête — l'interface n'est jamais
+        la seule barrière de sécurité.
+      </p>
+    </div>
+  </div>
+
+  <div style="margin-top:6mm;">
+    <div class="eyebrow">Navigation</div>
+    <h3 style="margin-bottom:3mm;">Une seule SPA, trois vues — et une condition d'affichage</h3>
+    <div class="grid3">
+      <div class="card" style="border-top:3px solid var(--green);">
+        <span class="badge b">vue accueil</span>
+        <p class="mono" style="font-size:7pt; color:var(--terra); margin-top:2mm;">view === 'accueil'</p>
+        <p class="card-sub">
+          Bannière, catalogue des prestations, témoignages. À gauche :
+          <b>AuthCard</b> si visiteur, <b>BookingForm</b> si client connecté.
+        </p>
+      </div>
+      <div class="card" style="border-top:3px solid var(--gold);">
+        <span class="badge o">vue mes-rdv</span>
+        <p class="mono" style="font-size:7pt; color:var(--terra); margin-top:2mm;">user &amp;&amp; role !== 'admin'</p>
+        <p class="card-sub">
+          Historique complet, annulation d'une demande en attente,
+          dépôt d'un avis sur une séance terminée.
+        </p>
+      </div>
+      <div class="card" style="border-top:3px solid var(--terra);">
+        <span class="badge r">vue admin</span>
+        <p class="mono" style="font-size:7pt; color:var(--terra); margin-top:2mm;">user.role === 'admin'</p>
+        <p class="card-sub">
+          Quatre onglets : tableau de bord, rendez-vous, prestations,
+          clients. Jamais rendue pour un client, même en forçant l'URL.
+        </p>
+      </div>
+    </div>
+    <p class="card-sub" style="margin-top:3mm;">
+      <b>Pas de React Router :</b> une seule variable d'état <span class="mono">view</span> suffit, ce qui évite
+      une dépendance et la réécriture d'URL côté hébergeur. La sécurité, elle, reste sur le serveur.
+    </p>
+  </div>
+
+  <div class="p-foot"><span>Élan — Coach de Vie · MERN</span><span>2 / 8</span></div>
+</section>
+
+<!-- ============================ PAGE 3 — ARCHITECTURE ============================ -->
+<section class="page">
+  <div class="p-head"><span>Architecture</span><span class="p-num">03 / 08</span></div>
+
+  <div class="eyebrow">Architecture</div>
+  <h2>Trois couches, une seule chaîne de responsabilités</h2>
+  <p class="lead" style="margin-top:2.5mm;">
+    Le front-end ne parle jamais à la base : il appelle une API REST, qui seule connaît
+    MongoDB. Chaque couche a un rôle unique — c'est la séparation des responsabilités (SoC).
+  </p>
+
+  <div style="margin-top:4mm;">
+    <svg viewBox="0 0 700 500" width="100%" role="img" aria-label="Diagramme d'architecture en trois couches">
+      <defs>
+        <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#1f4d3d"/>
+        </marker>
+        <marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#6b7a72"/>
+        </marker>
+      </defs>
+
+      <!-- COUCHE 1 -->
+      <rect x="14" y="8" width="672" height="122" rx="10" fill="#faf6ef" stroke="#e4dbcc"/>
+      <text x="28" y="27" class="s-lbl">COUCHE 1 · PRÉSENTATION</text>
+      <text x="28" y="45" class="s-b">Navigateur — React 19 + Vite</text>
+      <text x="200" y="45" class="s-s">déployé sur Vercel</text>
+
+      <rect x="28" y="58" width="200" height="58" rx="6" fill="#fff" stroke="#e4dbcc"/>
+      <text x="128" y="78" text-anchor="middle" class="s-t" font-weight="700">Composants JSX</text>
+      <text x="128" y="92" text-anchor="middle" class="s-s">10 publics + 5 admin</text>
+      <text x="128" y="105" text-anchor="middle" class="s-s">état local (useState)</text>
+
+      <rect x="240" y="58" width="200" height="58" rx="6" fill="#fff" stroke="#e4dbcc"/>
+      <text x="340" y="78" text-anchor="middle" class="s-t" font-weight="700">Redux Toolkit</text>
+      <text x="340" y="92" text-anchor="middle" class="s-s">5 slices : auth, rdv,</text>
+      <text x="340" y="105" text-anchor="middle" class="s-s">services, avis, ui</text>
+
+      <rect x="452" y="58" width="200" height="58" rx="6" fill="#fff" stroke="#e4dbcc"/>
+      <text x="552" y="78" text-anchor="middle" class="s-t" font-weight="700">axiosClient</text>
+      <text x="552" y="92" text-anchor="middle" class="s-s">instance unique +</text>
+      <text x="552" y="105" text-anchor="middle" class="s-s">intercepteur JWT</text>
+
+      <!-- FLECHE 1 -->
+      <line x1="350" y1="132" x2="350" y2="164" stroke="#1f4d3d" stroke-width="1.6" marker-end="url(#ar)"/>
+      <text x="340" y="145" text-anchor="end" class="s-m" font-weight="700">HTTPS · JSON</text>
+      <text x="340" y="157" text-anchor="end" class="s-s">requêtes / réponses</text>
+      <text x="360" y="145" class="s-m" font-weight="700">Authorization: Bearer &lt;token&gt;</text>
+      <text x="360" y="157" class="s-s">CORS restreint à CLIENT_URL</text>
+
+      <!-- COUCHE 2 -->
+      <rect x="14" y="170" width="672" height="172" rx="10" fill="#f2f7f3" stroke="#cfe0d5"/>
+      <text x="28" y="189" class="s-lbl">COUCHE 2 · APPLICATION</text>
+      <text x="28" y="207" class="s-b">Node.js + Express</text>
+      <text x="170" y="207" class="s-s">API REST — déployée sur Render</text>
+
+      <rect x="28" y="220" width="148" height="52" rx="6" fill="#fff" stroke="#cfe0d5"/>
+      <text x="102" y="240" text-anchor="middle" class="s-t" font-weight="700">Routes</text>
+      <text x="102" y="253" text-anchor="middle" class="s-s">5 routeurs</text>
+      <text x="102" y="265" text-anchor="middle" class="s-s">URL → contrôleur</text>
+      <line x1="176" y1="246" x2="186" y2="246" stroke="#1f4d3d" stroke-width="1.4" marker-end="url(#ar)"/>
+
+      <rect x="188" y="220" width="148" height="52" rx="6" fill="#fff" stroke="#cfe0d5"/>
+      <text x="262" y="240" text-anchor="middle" class="s-t" font-weight="700">Middlewares</text>
+      <text x="262" y="253" text-anchor="middle" class="s-s">protect · adminOnly</text>
+      <text x="262" y="265" text-anchor="middle" class="s-s">sécurité transversale</text>
+      <line x1="336" y1="246" x2="346" y2="246" stroke="#1f4d3d" stroke-width="1.4" marker-end="url(#ar)"/>
+
+      <rect x="348" y="220" width="148" height="52" rx="6" fill="#fff" stroke="#cfe0d5"/>
+      <text x="422" y="240" text-anchor="middle" class="s-t" font-weight="700">Contrôleurs</text>
+      <text x="422" y="253" text-anchor="middle" class="s-s">règles métier</text>
+      <text x="422" y="265" text-anchor="middle" class="s-s">statuts HTTP</text>
+      <line x1="496" y1="246" x2="506" y2="246" stroke="#1f4d3d" stroke-width="1.4" marker-end="url(#ar)"/>
+
+      <rect x="508" y="220" width="148" height="52" rx="6" fill="#fff" stroke="#cfe0d5"/>
+      <text x="582" y="240" text-anchor="middle" class="s-t" font-weight="700">Modèles</text>
+      <text x="582" y="253" text-anchor="middle" class="s-s">Mongoose · 4 schémas</text>
+      <text x="582" y="265" text-anchor="middle" class="s-s">validation des données</text>
+
+      <text x="28" y="292" class="s-s" font-weight="700">Middlewares transversaux appliqués à toutes les requêtes :</text>
+      <rect x="28" y="298" width="70" height="20" rx="10" fill="#1f4d3d"/>
+      <text x="63" y="312" text-anchor="middle" class="s-w" font-size="7.4">protect</text>
+      <rect x="104" y="298" width="78" height="20" rx="10" fill="#1f4d3d"/>
+      <text x="143" y="312" text-anchor="middle" class="s-w" font-size="7.4">adminOnly</text>
+      <rect x="188" y="298" width="86" height="20" rx="10" fill="#e7edf3"/>
+      <text x="231" y="312" text-anchor="middle" class="s-m" font-size="7.4" font-weight="700">errorHandler</text>
+      <rect x="280" y="298" width="52" height="20" rx="10" fill="#e7edf3"/>
+      <text x="306" y="312" text-anchor="middle" class="s-m" font-size="7.4" font-weight="700">notFound</text>
+      <rect x="338" y="298" width="44" height="20" rx="10" fill="#e7edf3"/>
+      <text x="360" y="312" text-anchor="middle" class="s-m" font-size="7.4" font-weight="700">cors</text>
+      <rect x="388" y="298" width="88" height="20" rx="10" fill="#e7edf3"/>
+      <text x="432" y="312" text-anchor="middle" class="s-m" font-size="7.4" font-weight="700">express.json()</text>
+
+      <text x="28" y="334" class="s-s">Un contrôleur ne connaît pas les URL ; un modèle ne reçoit jamais <tspan font-family="Consolas,monospace">req</tspan> ni <tspan font-family="Consolas,monospace">res</tspan>.</text>
+
+      <!-- FLECHE 2 -->
+      <line x1="350" y1="344" x2="350" y2="380" stroke="#1f4d3d" stroke-width="1.6" marker-end="url(#ar)"/>
+      <text x="360" y="362" class="s-m" font-weight="700">Mongoose ODM</text>
+      <text x="360" y="373" class="s-s">requêtes · populate() · validation</text>
+
+      <!-- COUCHE 3 -->
+      <rect x="14" y="386" width="672" height="100" rx="10" fill="#faf6ef" stroke="#e4dbcc"/>
+      <text x="28" y="405" class="s-lbl">COUCHE 3 · DONNÉES</text>
+      <text x="28" y="423" class="s-b">MongoDB Atlas</text>
+      <text x="152" y="423" class="s-s">cluster M0 · base coachDB</text>
+
+      <rect x="28" y="436" width="150" height="32" rx="6" fill="#fff" stroke="#e4dbcc"/>
+      <text x="103" y="456" text-anchor="middle" class="s-t" font-weight="700">users</text>
+      <rect x="190" y="436" width="150" height="32" rx="6" fill="#fff" stroke="#e4dbcc"/>
+      <text x="265" y="456" text-anchor="middle" class="s-t" font-weight="700">services</text>
+      <rect x="352" y="436" width="150" height="32" rx="6" fill="#fff" stroke="#e4dbcc"/>
+      <text x="427" y="456" text-anchor="middle" class="s-t" font-weight="700">rendezvous</text>
+      <rect x="514" y="436" width="150" height="32" rx="6" fill="#fff" stroke="#e4dbcc"/>
+      <text x="589" y="456" text-anchor="middle" class="s-t" font-weight="700">avis</text>
+    </svg>
+  </div>
+
+  <div class="grid2" style="margin-top:4mm;">
+    <div class="card tint">
+      <h3>Pourquoi cette séparation ?</h3>
+      <p class="card-sub">
+        Changer de base ou d'interface ne casse pas l'autre côté. Les règles métier
+        sont testables et réutilisables : la même fonction <span class="mono">createRendezVous</span>
+        sert au site, et servirait demain à une application mobile.
+      </p>
+    </div>
+    <div class="card tint">
+      <h3>Le trajet d'une requête</h3>
+      <p class="card-sub">
+        <span class="mono">POST /api/rendezvous</span> → <span class="mono">cors</span> →
+        <span class="mono">express.json()</span> → routeur → <span class="mono">protect</span> →
+        contrôleur → modèle Mongoose → Atlas → réponse JSON.
+      </p>
+    </div>
+  </div>
+
+  <h3 style="margin:5mm 0 2mm;">Qui fait quoi, et qui ne fait surtout pas quoi</h3>
+  <table class="t">
+    <tr><th style="width:28mm;">Couche</th><th>Responsabilité</th><th>Interdit</th></tr>
+    <tr><td><b>Modèle</b> (Mongoose)</td><td>Structure, types, validation, index, relations</td><td>Manipuler <span class="mono">req</span> ou <span class="mono">res</span></td></tr>
+    <tr><td><b>Contrôleur</b></td><td>Règles métier, accès aux modèles, code HTTP</td><td>Déclarer une URL</td></tr>
+    <tr><td><b>Route</b></td><td>Associer une URL à des middlewares puis à un contrôleur</td><td>Contenir de la logique métier</td></tr>
+    <tr><td><b>Middleware</b></td><td>Sécurité transversale : JWT, rôle, erreurs</td><td>Accéder directement aux collections</td></tr>
+    <tr><td><b>Composant</b> (React)</td><td>Affichage, état local, envoi de requêtes</td><td>Parler à MongoDB</td></tr>
+  </table>
+
+  <div class="p-foot"><span>Élan — Coach de Vie · MERN</span><span>3 / 8</span></div>
+</section>
+
+<!-- ============================ PAGE 4 — BASE DE DONNÉES ============================ -->
+<section class="page">
+  <div class="p-head"><span>Base de données</span><span class="p-num">04 / 08</span></div>
+
+  <div class="eyebrow">Modèle de données</div>
+  <h2>Quatre collections, quatre relations</h2>
+  <p class="lead" style="margin-top:2.5mm;">
+    Le rendez-vous est l'entité centrale : il relie un client à une prestation, et
+    donne lieu à un avis. Les flèches rouges matérialisent les références Mongoose
+    (<span class="mono">ref</span>) exploitées par <span class="mono">.populate()</span>.
+  </p>
+
+  <div style="margin-top:3mm;">
+    <svg viewBox="0 0 700 445" width="100%" role="img" aria-label="Diagramme entité-relation des quatre collections">
+      <defs>
+        <marker id="e1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#c4694a"/>
+        </marker>
+        <marker id="e2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#9aa79f"/>
+        </marker>
+      </defs>
+
+      <!-- USER -->
+      <rect x="14" y="12" width="218" height="152" rx="7" fill="#fff" stroke="#e4dbcc"/>
+      <path d="M14 19 a7 7 0 0 1 7 -7 h204 a7 7 0 0 1 7 7 v19 h-218 z" fill="#1f4d3d"/>
+      <text x="26" y="31" class="s-w" font-size="10">User</text>
+      <text x="222" y="31" text-anchor="end" fill="#c3d3c6" font-size="7.4">users</text>
+      <text x="26" y="53" class="s-m">_id</text><text x="70" y="53" class="s-s">ObjectId</text>
+      <text x="26" y="68" class="s-m">name</text><text x="70" y="68" class="s-s">String, requis</text>
+      <text x="26" y="83" class="s-m">email</text><text x="70" y="83" class="s-s">String, unique, regex</text>
+      <text x="26" y="98" class="s-m">password</text><text x="70" y="98" class="s-s">String (bcrypt)</text>
+      <text x="26" y="113" class="s-m">phone</text><text x="70" y="113" class="s-s">String, optionnel</text>
+      <text x="26" y="128" class="s-m">role</text><text x="70" y="128" class="s-s">client | admin</text>
+      <text x="26" y="148" class="s-s" fill="#c4694a">timestamps : createdAt, updatedAt</text>
+
+      <!-- SERVICE -->
+      <rect x="468" y="12" width="218" height="152" rx="7" fill="#fff" stroke="#e4dbcc"/>
+      <path d="M468 19 a7 7 0 0 1 7 -7 h204 a7 7 0 0 1 7 7 v19 h-218 z" fill="#c4694a"/>
+      <text x="480" y="31" class="s-w" font-size="10">Service</text>
+      <text x="676" y="31" text-anchor="end" fill="#f7ddd2" font-size="7.4">services</text>
+      <text x="480" y="53" class="s-m">_id</text><text x="524" y="53" class="s-s">ObjectId</text>
+      <text x="480" y="68" class="s-m">nom</text><text x="524" y="68" class="s-s">String, ≤ 80</text>
+      <text x="480" y="83" class="s-m">description</text><text x="524" y="83" class="s-s">String, ≤ 400</text>
+      <text x="480" y="98" class="s-m">duree</text><text x="524" y="98" class="s-s">Number, 15 → 240</text>
+      <text x="480" y="113" class="s-m">prix</text><text x="524" y="113" class="s-s">Number, ≥ 0</text>
+      <text x="480" y="128" class="s-m">actif</text><text x="524" y="128" class="s-s">Boolean, défaut true</text>
+      <text x="480" y="148" class="s-s" fill="#c4694a">timestamps</text>
+
+      <!-- RENDEZVOUS -->
+      <rect x="238" y="196" width="224" height="172" rx="7" fill="#fff" stroke="#1f4d3d" stroke-width="1.4"/>
+      <path d="M238 203 a7 7 0 0 1 7 -7 h210 a7 7 0 0 1 7 7 v19 h-224 z" fill="#2f6b56"/>
+      <text x="250" y="215" class="s-w" font-size="10">RendezVous</text>
+      <text x="452" y="215" text-anchor="end" fill="#cfe0d5" font-size="7.4">rendezvous</text>
+      <text x="250" y="237" class="s-m">_id</text><text x="300" y="237" class="s-s">ObjectId</text>
+      <text x="250" y="252" class="s-m">client</text><text x="300" y="252" class="s-s">ObjectId → User</text>
+      <text x="250" y="267" class="s-m">service</text><text x="300" y="267" class="s-s">ObjectId → Service</text>
+      <text x="250" y="282" class="s-m">date</text><text x="300" y="282" class="s-s">String « AAAA-MM-JJ »</text>
+      <text x="250" y="297" class="s-m">heure</text><text x="300" y="297" class="s-s">String « HH:MM »</text>
+      <text x="250" y="312" class="s-m">statut</text><text x="300" y="312" class="s-s">enum (4 valeurs)</text>
+      <text x="250" y="327" class="s-m">notes</text><text x="300" y="327" class="s-s">String, ≤ 500</text>
+      <text x="250" y="342" class="s-m">avis</text><text x="300" y="342" class="s-s">virtuel (jointure 1:1)</text>
+      <text x="250" y="360" class="s-s" fill="#2f6b56">index { date: 1, heure: 1 }</text>
+
+      <!-- AVIS -->
+      <rect x="486" y="248" width="200" height="120" rx="7" fill="#fff" stroke="#e4dbcc"/>
+      <path d="M486 255 a7 7 0 0 1 7 -7 h186 a7 7 0 0 1 7 7 v19 h-200 z" fill="#b8862f"/>
+      <text x="498" y="267" class="s-w" font-size="10">Avis</text>
+      <text x="674" y="267" text-anchor="end" fill="#f7e8c6" font-size="7.4">avis</text>
+      <text x="498" y="289" class="s-m">_id</text><text x="548" y="289" class="s-s">ObjectId</text>
+      <text x="498" y="304" class="s-m">client</text><text x="548" y="304" class="s-s">ObjectId → User</text>
+      <text x="498" y="319" class="s-m">rendezVous</text><text x="548" y="319" class="s-s">→ RendezVous, unique</text>
+      <text x="498" y="334" class="s-m">note</text><text x="548" y="334" class="s-s">Number, 1 → 5</text>
+      <text x="498" y="349" class="s-m">texte</text><text x="548" y="349" class="s-s">String, ≤ 500</text>
+
+      <!-- RELATIONS -->
+      <polyline points="123,164 123,240 236,240" fill="none" stroke="#c4694a" stroke-width="1.5" marker-end="url(#e1)"/>
+      <text x="130" y="234" class="s-m" font-weight="700">1 — N</text>
+      <text x="160" y="234" class="s-s">réserve</text>
+
+      <polyline points="577,164 577,196 464,196" fill="none" stroke="#c4694a" stroke-width="1.5" marker-end="url(#e1)"/>
+      <text x="500" y="191" class="s-m" font-weight="700">1 — N</text>
+      <text x="530" y="191" class="s-s">concerne</text>
+
+      <line x1="464" y1="300" x2="484" y2="300" stroke="#c4694a" stroke-width="1.5" marker-end="url(#e1)"/>
+      <text x="474" y="294" text-anchor="middle" class="s-m" font-weight="700">1:1</text>
+
+      <polyline points="123,164 123,415 586,415 586,370" fill="none" stroke="#9aa79f" stroke-width="1.3" stroke-dasharray="4 3" marker-end="url(#e2)"/>
+      <text x="132" y="410" class="s-m" font-weight="700">1 — N</text>
+      <text x="162" y="410" class="s-s">laisse</text>
+    </svg>
+  </div>
+
+  <div class="legend">
+    <span><i class="ref" style="border-color:#c4694a;"></i>relation 1:N matérialisée par une référence</span>
+    <span><i class="dash"></i>relation secondaire (client → avis)</span>
+    <span><i style="border-top:2px solid #1f4d3d;"></i>entité centrale</span>
+  </div>
+
+  <div class="grid2" style="margin-top:4mm; align-items:start;">
+    <div>
+      <h3 style="margin-bottom:2mm;">La jointure en pratique</h3>
+      <pre><span class="c">// server/src/controllers/rendezVousController.js</span>
+<span class="k">const</span> rdv = <span class="k">await</span> RendezVous.find({ client: req.user._id })
+  .populate(<span class="s">'service'</span>, <span class="s">'nom duree prix'</span>)
+  .populate(<span class="s">'avis'</span>)
+  .sort({ date: -1, heure: -1 });</pre>
+      <p class="card-sub" style="margin-top:2mm;">
+        <b>1 requête</b> au lieu de 1 + N : Mongoose regroupe les identifiants
+        et interroge <span class="mono">services</span> puis <span class="mono">avis</span> en une seule passe.
+      </p>
+    </div>
+
+    <div class="card tint">
+      <h3>Pourquoi <span class="mono">date</span> est une chaîne ?</h3>
+      <p class="card-sub">
+        Un objet <span class="mono">Date</span> stocké en UTC puis réaffiché en heure locale
+        décale souvent le jour d'un cran (<span class="mono">2026-11-15</span> devient le 14).
+        En stockant <span class="mono">« AAAA-MM-JJ »</span> et <span class="mono">« HH:MM »</span>,
+        le tri lexicographique reste exact, la comparaison aussi, et aucun fuseau
+        horaire n'intervient.
+      </p>
+    </div>
+  </div>
+
+  <h3 style="margin:5mm 0 2mm;">Les quatre relations, telles qu'elles sont déclarées</h3>
+  <table class="t">
+    <tr><th style="width:46mm;">Relation</th><th style="width:20mm;">Cardinalité</th><th>Champ de référence</th><th>Lecture côté serveur</th></tr>
+    <tr><td>User → RendezVous</td><td><span class="badge g">1 — N</span></td><td><span class="mono">RendezVous.client</span></td><td><span class="mono">.populate('client', 'name email phone')</span></td></tr>
+    <tr><td>Service → RendezVous</td><td><span class="badge g">1 — N</span></td><td><span class="mono">RendezVous.service</span></td><td><span class="mono">.populate('service', 'nom duree prix')</span></td></tr>
+    <tr><td>RendezVous → Avis</td><td><span class="badge o">1 — 1</span></td><td><span class="mono">Avis.rendezVous</span> (unique)</td><td><span class="mono">.populate('avis')</span> via champ virtuel</td></tr>
+    <tr><td>User → Avis</td><td><span class="badge g">1 — N</span></td><td><span class="mono">Avis.client</span></td><td><span class="mono">.populate('client', 'name')</span></td></tr>
+  </table>
+
+  <div class="p-foot"><span>Élan — Coach de Vie · MERN</span><span>4 / 8</span></div>
+</section>
+
+<!-- ============================ PAGE 5 — SÉCURITÉ / JWT ============================ -->
+<section class="page">
+  <div class="p-head"><span>Sécurité</span><span class="p-num">05 / 08</span></div>
+
+  <div class="eyebrow">Authentification</div>
+  <h2>Le trajet d'un token, de la connexion à la requête protégée</h2>
+  <p class="lead" style="margin-top:2.5mm;">
+    Le mot de passe ne quitte jamais la base sous forme lisible : il est comparé via
+    <span class="mono">bcrypt.compare</span>. Le serveur renvoie ensuite un JWT signé, que le
+    navigateur renvoie à chaque appel. Aucune session n'est stockée côté serveur.
+  </p>
+
+  <div style="margin-top:3mm;">
+    <svg viewBox="0 0 700 420" width="100%" role="img" aria-label="Diagramme de séquence du flux JWT">
+      <defs>
+        <marker id="j1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#1f4d3d"/>
+        </marker>
+        <marker id="j2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a968f"/>
+        </marker>
+      </defs>
+
+      <!-- bandeau zone protégée -->
+      <rect x="16" y="286" width="668" height="112" rx="6" fill="#1f4d3d" fill-opacity="0.05"/>
+      <text x="24" y="300" class="s-lbl">ZONE PROTÉGÉE · MIDDLEWARE protect</text>
+
+      <!-- en-têtes -->
+      <rect x="20" y="8" width="180" height="32" rx="6" fill="#faf6ef" stroke="#e4dbcc"/>
+      <text x="110" y="28" text-anchor="middle" class="s-t" font-weight="700">Navigateur (React)</text>
+      <rect x="260" y="8" width="180" height="32" rx="6" fill="#e9f1ec" stroke="#cfe0d5"/>
+      <text x="350" y="28" text-anchor="middle" class="s-t" font-weight="700">API Express</text>
+      <rect x="500" y="8" width="180" height="32" rx="6" fill="#faf6ef" stroke="#e4dbcc"/>
+      <text x="590" y="28" text-anchor="middle" class="s-t" font-weight="700">MongoDB Atlas</text>
+
+      <!-- lignes de vie -->
+      <line x1="110" y1="40" x2="110" y2="402" stroke="#d6cdbd" stroke-width="1.2" stroke-dasharray="4 4"/>
+      <line x1="350" y1="40" x2="350" y2="402" stroke="#d6cdbd" stroke-width="1.2" stroke-dasharray="4 4"/>
+      <line x1="590" y1="40" x2="590" y2="402" stroke="#d6cdbd" stroke-width="1.2" stroke-dasharray="4 4"/>
+
+      <!-- 1 -->
+      <line x1="110" y1="72" x2="344" y2="72" stroke="#1f4d3d" stroke-width="1.4" marker-end="url(#j1)"/>
+      <text x="230" y="66" text-anchor="middle" class="s-m" font-weight="700">POST /api/auth/login  { email, password }</text>
+
+      <!-- 2 -->
+      <line x1="350" y1="100" x2="584" y2="100" stroke="#1f4d3d" stroke-width="1.4" marker-end="url(#j1)"/>
+      <text x="470" y="94" text-anchor="middle" class="s-m">User.findOne({ email })</text>
+
+      <!-- 3 -->
+      <line x1="590" y1="124" x2="356" y2="124" stroke="#8a968f" stroke-width="1.3" stroke-dasharray="4 3" marker-end="url(#j2)"/>
+      <text x="470" y="118" text-anchor="middle" class="s-s">utilisateur + hash bcrypt</text>
+
+      <!-- notes API -->
+      <rect x="362" y="140" width="212" height="22" rx="4" fill="#f6efe2" stroke="#e4dbcc"/>
+      <text x="370" y="155" class="s-m" font-family="Consolas,monospace">bcrypt.compare(password, hash)</text>
+      <rect x="362" y="170" width="212" height="22" rx="4" fill="#f6efe2" stroke="#e4dbcc"/>
+      <text x="370" y="185" class="s-m" font-family="Consolas,monospace">jwt.sign({ id, role }, SECRET, 1d)</text>
+
+      <!-- 6 -->
+      <line x1="350" y1="212" x2="116" y2="212" stroke="#8a968f" stroke-width="1.3" stroke-dasharray="4 3" marker-end="url(#j2)"/>
+      <text x="230" y="206" text-anchor="middle" class="s-m" font-weight="700">200 { user, token }</text>
+
+      <!-- note navigateur -->
+      <rect x="30" y="226" width="196" height="22" rx="4" fill="#f6efe2" stroke="#e4dbcc"/>
+      <text x="38" y="241" class="s-m" font-family="Consolas,monospace">localStorage.setItem('token')</text>
+
+      <!-- 8 -->
+      <line x1="110" y1="270" x2="344" y2="270" stroke="#1f4d3d" stroke-width="1.4" marker-end="url(#j1)"/>
+      <text x="230" y="264" text-anchor="middle" class="s-m" font-weight="700">GET /api/rendezvous + Bearer &lt;token&gt;</text>
+
+      <!-- 9 -->
+      <line x1="350" y1="306" x2="584" y2="306" stroke="#1f4d3d" stroke-width="1.4" marker-end="url(#j1)"/>
+      <text x="470" y="300" text-anchor="middle" class="s-m">jwt.verify(token) → User.findById()</text>
+
+      <!-- 10 -->
+      <line x1="590" y1="332" x2="356" y2="332" stroke="#8a968f" stroke-width="1.3" stroke-dasharray="4 3" marker-end="url(#j2)"/>
+      <text x="470" y="326" text-anchor="middle" class="s-s">utilisateur rechargé (sans password)</text>
+
+      <!-- 11 -->
+      <line x1="350" y1="364" x2="116" y2="364" stroke="#8a968f" stroke-width="1.3" stroke-dasharray="4 3" marker-end="url(#j2)"/>
+      <text x="230" y="358" text-anchor="middle" class="s-m" font-weight="700">200 [ ...rendezVous ]</text>
+
+      <text x="24" y="390" class="s-s">Si le token est absent, invalide ou expiré → 401 et message explicite. Si le rôle est insuffisant → 403.</text>
+    </svg>
+  </div>
+
+  <div class="grid2" style="margin-top:4mm; align-items:start;">
+    <div>
+      <h3 style="margin-bottom:2mm;">Trois barrières, pas une</h3>
+      <table class="t">
+        <tr><th>Menace</th><th>Contre-mesure</th></tr>
+        <tr><td>Mot de passe volé en base</td><td>Hachage bcrypt + sel (facteur 10)</td></tr>
+        <tr><td>Réserver au nom d'autrui</td><td><span class="mono">client = req.user._id</span>, jamais le body</td></tr>
+        <tr><td>Lire les RDV d'un autre</td><td>Contrôle propriétaire → 403</td></tr>
+        <tr><td>Se faire passer pour admin</td><td><span class="mono">role</span> forcé à client ; <span class="mono">adminOnly</span></td></tr>
+        <tr><td>Session éternelle</td><td><span class="mono">expiresIn: '1d'</span> + <span class="mono">TokenExpiredError</span></td></tr>
+      </table>
+    </div>
+
+    <div>
+      <h3 style="margin-bottom:2mm;">L'intercepteur Axios</h3>
+      <pre><span class="c">// client/src/api/axiosClient.js</span>
+axiosClient.interceptors.request.use((config) =&gt; {
+  <span class="k">const</span> token = localStorage.getItem(<span class="s">'token'</span>);
+  <span class="k">if</span> (token) config.headers.Authorization =
+    <span class="s">`Bearer ${token}`</span>;
+  <span class="k">return</span> config;
+});</pre>
+      <p class="card-sub" style="margin-top:2mm;">
+        Aucun composant ne manipule le token : il est posé une seule fois,
+        automatiquement, sur <b>toutes</b> les requêtes.
+      </p>
+    </div>
+  </div>
+
+  <h3 style="margin:5mm 0 2mm;">Anatomie du token : trois parties, une seule signature</h3>
+  <div class="grid3">
+    <div class="card tint">
+      <span class="badge b">header</span>
+      <p class="mono" style="font-size:7.4pt; margin-top:2mm; color:var(--terra);">{ "alg": "HS256", "typ": "JWT" }</p>
+      <p class="card-sub">Algorithme de signature et type de jeton.</p>
+    </div>
+    <div class="card tint">
+      <span class="badge o">payload</span>
+      <p class="mono" style="font-size:7.4pt; margin-top:2mm; color:var(--terra);">{ "id": "…", "role": "client", "exp": … }</p>
+      <p class="card-sub">Lisible par tous : on n'y met <b>jamais</b> de mot de passe.</p>
+    </div>
+    <div class="card tint">
+      <span class="badge r">signature</span>
+      <p class="mono" style="font-size:7.4pt; margin-top:2mm; color:var(--terra);">HMACSHA256(header + payload, JWT_SECRET)</p>
+      <p class="card-sub">Une modification du payload invalide la signature → 401.</p>
+    </div>
+  </div>
+
+  <div class="p-foot"><span>Élan — Coach de Vie · MERN</span><span>5 / 8</span></div>
+</section>
+
+
+<!-- ============================ PAGE 6 — PARCOURS ============================ -->
+<section class="page">
+  <div class="p-head"><span>Parcours</span><span class="p-num">06 / 08</span></div>
+
+  <div class="eyebrow">Fonctionnement</div>
+  <h2>De la réservation à l'avis : un cycle maîtrisé</h2>
+
+  <div class="grid2" style="margin-top:4mm; align-items:start;">
+    <div>
+      <h3 style="margin-bottom:3mm;">Ce que fait le client, et ce que fait le serveur</h3>
+      <div class="tl">
+        <div class="tl-item">
+          <span class="tl-num">1</span>
+          <h4>Choisir une prestation</h4>
+          <p>La carte « Réserver » écrit l'identifiant dans Redux (<span class="mono">ui.selectedServiceId</span>) et fait défiler vers le formulaire.</p>
+        </div>
+        <div class="tl-item">
+          <span class="tl-num">2</span>
+          <h4>Choisir une date</h4>
+          <p>Le champ est borné à aujourd'hui (<span class="mono">min={todayISO()}</span>) : une date passée est impossible à saisir.</p>
+        </div>
+        <div class="tl-item">
+          <span class="tl-num">3</span>
+          <h4>Demander les créneaux</h4>
+          <p class="api">GET /rendezvous/disponibilites?date=…</p>
+          <p>Le serveur ne renvoie que les heures occupées : aucune donnée personnelle ne fuit.</p>
+        </div>
+        <div class="tl-item">
+          <span class="tl-num">4</span>
+          <h4>Choisir un créneau</h4>
+          <p>Les heures prises ou déjà passées sont désactivées et barrées.</p>
+        </div>
+        <div class="tl-item">
+          <span class="tl-num">5</span>
+          <h4>Envoyer la demande</h4>
+          <p class="api">POST /rendezvous</p>
+          <p>Le serveur revérifie : créneau futur, prestation active, aucun conflit.</p>
+        </div>
+        <div class="tl-item">
+          <span class="tl-num">6</span>
+          <h4>Suivre et clôturer</h4>
+          <p>Le coach confirme puis termine. Le client peut alors déposer un avis, une seule fois.</p>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h3 style="margin-bottom:3mm;">La règle qui évite les doubles réservations</h3>
+      <pre><span class="c">// vérifié côté serveur, pas seulement dans l'interface</span>
+<span class="k">const</span> conflit = <span class="k">await</span> RendezVous.findOne({
+  date,
+  heure,
+  statut: { $in: [<span class="s">'en_attente'</span>, <span class="s">'confirme'</span>] }
+});
+
+<span class="k">if</span> (conflit) {
+  <span class="k">return</span> res.status(<span class="s">409</span>).json({
+    message: <span class="s">'Ce creneau est deja reserve'</span>
+  });
+}</pre>
+
+      <div class="card tint" style="margin-top:3mm;">
+        <h3>Pourquoi revérifier côté serveur ?</h3>
+        <p class="card-sub">
+          Désactiver un bouton dans le navigateur ne protège de rien : n'importe qui
+          peut appeler l'API directement. Deux clients qui cliquent à la même seconde
+          passent tous les deux la validation de l'interface — seul le contrôle
+          serveur, appuyé par l'index <span class="mono">{ date, heure }</span>, tranche.
+        </p>
+      </div>
+
+      <div class="card tint" style="margin-top:3mm;">
+        <h3>Et l'annulation ?</h3>
+        <p class="card-sub">
+          Un client ne peut envoyer que <span class="mono">{ statut: 'annule' }</span>.
+          Toute autre valeur renvoie <b>403</b> : il ne peut ni confirmer, ni terminer
+          son propre rendez-vous.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="margin:4mm 0 2mm;">Cycle de vie d'un rendez-vous</h3>
+  <svg viewBox="0 0 700 158" width="100%" role="img" aria-label="Diagramme des états d'un rendez-vous">
+    <defs>
+      <marker id="st" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#6b7a72"/>
+      </marker>
+    </defs>
+
+    <rect x="24" y="30" width="132" height="38" rx="19" fill="#fbf0d8" stroke="#ecd9a8"/>
+    <text x="90" y="54" text-anchor="middle" class="s-t" font-weight="700">en_attente</text>
+
+    <rect x="216" y="30" width="132" height="38" rx="19" fill="#e2efe9" stroke="#c6e3d3"/>
+    <text x="282" y="54" text-anchor="middle" class="s-t" font-weight="700">confirme</text>
+
+    <rect x="408" y="30" width="132" height="38" rx="19" fill="#e6f2ea" stroke="#c6e3d3"/>
+    <text x="474" y="54" text-anchor="middle" class="s-t" font-weight="700">termine</text>
+
+    <rect x="592" y="30" width="92" height="38" rx="19" fill="#fff" stroke="#d9a441" stroke-dasharray="4 3"/>
+    <text x="638" y="54" text-anchor="middle" class="s-t" font-weight="700">Avis</text>
+
+    <rect x="216" y="106" width="132" height="38" rx="19" fill="#fbe9e5" stroke="#f0cfc8"/>
+    <text x="282" y="130" text-anchor="middle" class="s-t" font-weight="700">annule</text>
+
+    <line x1="158" y1="49" x2="212" y2="49" stroke="#6b7a72" stroke-width="1.4" marker-end="url(#st)"/>
+    <text x="185" y="43" text-anchor="middle" class="s-s">coach</text>
+
+    <line x1="350" y1="49" x2="404" y2="49" stroke="#6b7a72" stroke-width="1.4" marker-end="url(#st)"/>
+    <text x="377" y="43" text-anchor="middle" class="s-s">coach</text>
+
+    <line x1="542" y1="49" x2="588" y2="49" stroke="#6b7a72" stroke-width="1.4" marker-end="url(#st)"/>
+    <text x="565" y="43" text-anchor="middle" class="s-s">1 fois</text>
+
+    <polyline points="90,68 90,125 212,125" fill="none" stroke="#6b7a72" stroke-width="1.4" marker-end="url(#st)"/>
+    <text x="140" y="120" text-anchor="middle" class="s-s">client</text>
+
+    <line x1="282" y1="68" x2="282" y2="102" stroke="#6b7a72" stroke-width="1.4" marker-end="url(#st)"/>
+    <text x="290" y="90" class="s-s">coach / client</text>
+  </svg>
+
+  <h3 style="margin:4mm 0 2mm;">Tests de validation réalisés</h3>
+  <table class="t">
+    <tr><th style="width:6mm;">#</th><th>Scénario</th><th style="width:18mm;">Attendu</th><th style="width:22mm;">Obtenu</th></tr>
+    <tr><td>1</td><td>Inscription avec un email déjà utilisé</td><td><span class="badge r">409</span></td><td>Conforme</td></tr>
+    <tr><td>2</td><td>Connexion avec un mauvais mot de passe</td><td><span class="badge r">401</span></td><td>Conforme</td></tr>
+    <tr><td>3</td><td><span class="mono">POST /rendezvous</span> sans token</td><td><span class="badge r">401</span></td><td>Conforme</td></tr>
+    <tr><td>4</td><td>Réservation sur un créneau déjà pris</td><td><span class="badge r">409</span></td><td>Conforme</td></tr>
+    <tr><td>5</td><td>Client appelant <span class="mono">GET /rendezvous</span> (liste admin)</td><td><span class="badge r">403</span></td><td>Conforme</td></tr>
+    <tr><td>6</td><td>Suppression d'une prestation liée à un rendez-vous</td><td><span class="badge r">400</span></td><td>Conforme</td></tr>
+  </table>
+
+  <div class="p-foot"><span>Élan — Coach de Vie · MERN</span><span>6 / 8</span></div>
+</section>
+
+<style>
+  /* ---------- maquettes d'interface ---------- */
+  .mk {
+    position: relative;
+    border: 1px solid var(--line);
+    border-radius: 3mm;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 3mm 9mm rgba(31, 77, 61, .12);
+    font-size: 7pt;
+    line-height: 1.35;
+  }
+  .mk-top { display: flex; align-items: center; gap: 1.2mm; padding: 1.3mm 2.5mm; background: #efe7d9; border-bottom: 1px solid var(--line); }
+  .mk-dot { width: 1.5mm; height: 1.5mm; border-radius: 50%; background: #c9c0b0; }
+  .mk-url { margin-left: 2mm; background: #fff; border-radius: 9mm; padding: .3mm 2.5mm; font-size: 5.6pt; color: var(--muted); font-family: Consolas, monospace; }
+
+  .mk-nav { display: flex; align-items: center; gap: 2mm; padding: 1.7mm 3mm; border-bottom: 1px solid var(--line); background: var(--cream); }
+  .mk-logo { width: 4mm; height: 4mm; border-radius: 1.2mm; background: var(--green); color: #fff; display: grid; place-items: center; font-size: 5.6pt; font-weight: 700; font-family: Georgia, serif; }
+  .mk-name { font-size: 7.6pt; font-weight: 700; font-family: Georgia, serif; }
+  .mk-name span { font-size: 4.8pt; color: var(--terra); text-transform: uppercase; letter-spacing: .1em; font-family: 'Segoe UI', sans-serif; }
+  .mk-links { margin-left: auto; display: flex; gap: 2mm; font-size: 5.6pt; color: var(--muted); align-items: center; }
+  .mk-on { background: var(--green); color: #fff; border-radius: 9mm; padding: .5mm 2mm; font-weight: 700; }
+  .mk-user { background: #fff; border: 1px solid var(--line); border-radius: 9mm; padding: .5mm 2mm; font-size: 5.4pt; display: flex; align-items: center; gap: 1mm; }
+  .mk-dotg { width: 1.4mm; height: 1.4mm; border-radius: 50%; background: var(--ok); }
+
+  .mk-hero { display: grid; grid-template-columns: 1.3fr .85fr; gap: 4mm; padding: 4mm; background: linear-gradient(180deg, #f7f1e7, #faf6ef); }
+  .mk-eyebrow { font-size: 4.6pt; text-transform: uppercase; letter-spacing: .16em; color: var(--terra); font-weight: 700; }
+  .mk-h1 { font-family: Georgia, serif; font-size: 11.5pt; line-height: 1.08; margin: 1mm 0 1.5mm; }
+  .mk-h1 em { color: var(--green); font-style: italic; }
+  .mk-p { font-size: 5.8pt; color: var(--muted); max-width: 52mm; }
+  .mk-btns { display: flex; gap: 1.5mm; margin-top: 2.5mm; align-items: center; }
+  .mk-bp { background: var(--green); color: #fff; border-radius: 9mm; padding: 1mm 3mm; font-size: 5.6pt; font-weight: 700; }
+  .mk-bo { border: 1px solid var(--green); color: var(--green); border-radius: 9mm; padding: 1mm 3mm; font-size: 5.6pt; font-weight: 700; }
+
+  .mk-dark { background: var(--green); color: #e9f0ea; border-radius: 3mm; padding: 3mm; }
+  .mk-lbl { font-size: 4.4pt; letter-spacing: .14em; color: #cfdccf; text-transform: uppercase; font-weight: 700; }
+  .mk-stats { display: flex; gap: 3mm; margin: 2mm 0; }
+  .mk-stats b { display: block; font-family: Georgia, serif; font-size: 8.6pt; color: #fff; line-height: 1; }
+  .mk-stats span { font-size: 4.4pt; color: #cfdccf; }
+  .mk-quote { font-family: Georgia, serif; font-style: italic; font-size: 5.6pt; border-top: 1px solid rgba(255,255,255,.2); padding-top: 1.5mm; }
+
+  .mk-svcs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2mm; padding: 3mm; background: var(--cream); border-top: 1px solid var(--line); }
+  .mk-svc { border: 1px solid var(--line); border-radius: 2.5mm; padding: 2mm; background: #fff; display: flex; flex-direction: column; gap: .8mm; }
+  .mk-svc b { font-family: Georgia, serif; font-size: 6pt; }
+  .mk-price { color: var(--terra); font-size: 5.2pt; font-weight: 800; }
+  .mk-svc p { font-size: 4.8pt; color: var(--muted); }
+  .mk-chip { background: var(--sand); color: var(--green); border-radius: 9mm; padding: .2mm 1.5mm; font-size: 4.4pt; font-weight: 700; align-self: flex-start; }
+  .mk-svcbtn { border: 1px solid var(--green); color: var(--green); border-radius: 9mm; padding: .7mm 0; text-align: center; font-size: 4.8pt; font-weight: 700; margin-top: auto; }
+
+  .mk-body2 { display: grid; grid-template-columns: .95fr 1.05fr; gap: 3mm; padding: 3mm; background: var(--cream); }
+  .mk-form { border: 1px solid var(--line); border-radius: 2.5mm; padding: 2.5mm; background: #fff; }
+  .mk-pill { display: inline-block; background: #e6f2ea; color: var(--ok); font-size: 4.2pt; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; padding: .3mm 1.5mm; border-radius: 9mm; }
+  .mk-fh { font-family: Georgia, serif; font-size: 7.2pt; font-weight: 700; margin: .8mm 0 1.5mm; }
+  .mk-fl { font-size: 4.2pt; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 700; margin-top: 1.4mm; display: block; }
+  .mk-fi { border: 1px solid var(--line); border-radius: 1.2mm; padding: .8mm 1.5mm; font-size: 5.2pt; color: #3f4c45; background: #fff; margin-top: .5mm; display: block; }
+  .mk-slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1mm; margin-top: 1mm; }
+  .mk-slot { border: 1px solid var(--line); border-radius: 1.2mm; text-align: center; padding: .7mm 0; font-size: 5pt; font-weight: 700; background: #fff; }
+  .mk-slot.on { background: var(--green); color: #fff; border-color: var(--green); }
+  .mk-slot.off { background: #f4f0e8; color: #aaa; text-decoration: line-through; }
+  .mk-sum { background: var(--sand); border-radius: 1.5mm; padding: 1.5mm; margin-top: 2mm; font-size: 4.8pt; color: var(--muted); }
+  .mk-sum div { display: flex; justify-content: space-between; margin-bottom: .4mm; }
+  .mk-sum b { color: var(--ink); }
+  .mk-sum .tot { border-top: 1px dashed #d6c9b3; padding-top: .6mm; margin-top: .6mm; }
+  .mk-sum .tot b { color: var(--terra); }
+  .mk-submit { background: var(--green); color: #fff; text-align: center; border-radius: 9mm; padding: 1.1mm; font-size: 5.4pt; font-weight: 700; margin-top: 2mm; }
+
+  .mk-card { border: 1px solid var(--line); border-radius: 2.5mm; padding: 2.2mm; background: #fff; margin-bottom: 1.8mm; }
+  .mk-card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 2mm; }
+  .mk-card h5 { font-family: Georgia, serif; font-size: 6.4pt; margin: 0; }
+  .mk-card .meta { font-size: 4.6pt; color: var(--muted); margin-top: .4mm; }
+  .st { font-size: 4.2pt; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; padding: .4mm 1.6mm; border-radius: 9mm; white-space: nowrap; }
+  .st.p { background: #fbf0d8; color: #8a6414; }
+  .st.c { background: #e2efe9; color: var(--green2); }
+  .st.d { background: #e6f2ea; color: var(--ok); }
+  .mk-avis { background: #fbf7ef; border: 1px solid var(--line); border-radius: 1.5mm; padding: 1.2mm; margin-top: 1.2mm; font-size: 4.6pt; color: var(--muted); }
+  .stars { color: var(--gold); letter-spacing: .1em; }
+
+  .num {
+    display: inline-grid; place-items: center;
+    width: 3.2mm; height: 3.2mm; border-radius: 50%;
+    background: var(--terra); color: #fff;
+    font-size: 5.2pt; font-weight: 800;
+    font-family: 'Segoe UI', sans-serif;
+    vertical-align: middle;
+    margin-right: 1mm;
+  }
+  .notes { display: grid; grid-template-columns: 1fr 1fr; gap: 1mm 4mm; margin-top: 2.5mm; font-size: 6.4pt; color: #45524b; }
+  .notes > div { display: flex; gap: 1.4mm; align-items: flex-start; }
+  .notes .num { flex: none; margin: .2mm 0 0 0; }
+</style>
+
+<!-- ============================ PAGE 7 — APP PUBLIC ============================ -->
+<section class="page">
+  <div class="p-head"><span>L'application en images</span><span class="p-num">07 / 08</span></div>
+
+  <div class="eyebrow">Espace public</div>
+  <h2>Accueil et réservation</h2>
+  <p class="lead" style="margin-top:2mm;">
+    Une seule page, trois vues. Un visiteur voit le formulaire de connexion à gauche ;
+    un client connecté voit à la même place le formulaire de réservation.
+  </p>
+
+  <!-- MAQUETTE 1 : ACCUEIL -->
+  <div class="mk" style="margin-top:4mm;">
+    <div class="mk-top">
+      <span class="mk-dot"></span><span class="mk-dot"></span><span class="mk-dot"></span>
+      <span class="mk-url">localhost:5173</span>
+    </div>
+
+    <div class="mk-nav">
+      <span class="mk-logo">E</span>
+      <span class="mk-name">Élan <span>Coach de Vie</span></span>
+      <span class="mk-links">
+        <span>Accueil</span>
+        <span class="mk-on"><span class="num">4</span>Mes rendez-vous 2</span>
+        <span class="mk-user"><span class="num">1</span><span class="mk-dotg"></span> Aya Ben Amor · client</span>
+      </span>
+    </div>
+
+    <div class="mk-hero">
+      <div>
+        <div class="mk-eyebrow">Coaching de vie · Tunis</div>
+        <div class="mk-h1">Retrouvez votre élan,<br><em>une séance à la fois.</em></div>
+        <div class="mk-p">
+          Un accompagnement bienveillant et concret pour clarifier vos objectifs,
+          traverser un changement ou retrouver votre équilibre.
+        </div>
+        <div class="mk-btns">
+          <span class="mk-bp"><span class="num">2</span>Réserver une séance</span>
+          <span class="mk-bo">Voir les prestations</span>
+        </div>
+      </div>
+      <div class="mk-dark">
+        <div class="mk-lbl">Le cabinet en chiffres</div>
+        <div class="mk-stats">
+          <span><b>5</b>prestations</span>
+          <span><b>1h</b>d'écoute</span>
+          <span><b>100%</b>confidentiel</span>
+        </div>
+        <div class="mk-quote">« Le premier pas n'est pas de tout changer, c'est de voir clair. »</div>
+      </div>
+    </div>
+
+    <div class="mk-svcs">
+      <div class="mk-svc">
+        <b>Coaching individuel</b>
+        <span class="mk-price">120 TND</span>
+        <p>Lever un blocage et avancer concrètement.</p>
+        <span class="mk-chip">60 min</span>
+        <span class="mk-svcbtn"><span class="num">3</span>Réserver</span>
+      </div>
+      <div class="mk-svc">
+        <b>Gestion du stress</b>
+        <span class="mk-price">140 TND</span>
+        <p>Retrouver de l'énergie et poser des limites.</p>
+        <span class="mk-chip">60 min</span>
+        <span class="mk-svcbtn"><span class="num">3</span>Réserver</span>
+      </div>
+      <div class="mk-svc">
+        <b>Bilan de vie</b>
+        <span class="mk-price">250 TND</span>
+        <p>Faire le point sur vos priorités.</p>
+        <span class="mk-chip">120 min</span>
+        <span class="mk-svcbtn"><span class="num">3</span>Réserver</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="notes">
+    <div><span class="num">1</span><span>Le badge affiche <b>user.name</b> et <b>user.role</b> lus dans <span class="mono">authSlice</span>. Un visiteur voit « Mode visiteur ».</span></div>
+    <div><span class="num">2</span><span>Si aucun utilisateur : défilement vers <span class="mono">#auth</span>. Sinon vers <span class="mono">#reservation</span>.</span></div>
+    <div><span class="num">3</span><span><span class="mono">dispatch(selectService(id))</span> : la prestation choisie traverse Redux, sans prop drilling.</span></div>
+    <div><span class="num">4</span><span>Le compteur « Mes rendez-vous » reflète <span class="mono">rendezVous.items.length</span>.</span></div>
+  </div>
+
+  <!-- MAQUETTE 2 : RESERVATION -->
+  <h3 style="margin:6mm 0 2.5mm;">Réservation — le créneau se choisit en un clic</h3>
+
+  <div class="mk">
+    <div class="mk-top">
+      <span class="mk-dot"></span><span class="mk-dot"></span><span class="mk-dot"></span>
+      <span class="mk-url">localhost:5173 — espace client</span>
+    </div>
+
+    <div class="mk-body2">
+      <div class="mk-form">
+        <span class="mk-pill">Réservation en ligne</span>
+        <div class="mk-fh">Prendre rendez-vous</div>
+
+        <span class="mk-fl">Prestation</span>
+        <span class="mk-fi">Coaching individuel — 60 min — 120 TND ▾</span>
+
+        <span class="mk-fl"><span class="num">5</span>Date</span>
+        <span class="mk-fi">15/11/2026</span>
+
+        <span class="mk-fl"><span class="num">6</span>Créneau horaire</span>
+        <div class="mk-slots">
+          <span class="mk-slot off">09:00</span>
+          <span class="mk-slot">10:00</span>
+          <span class="mk-slot on">11:00</span>
+          <span class="mk-slot off">14:00</span>
+          <span class="mk-slot">15:00</span>
+          <span class="mk-slot">16:00</span>
+        </div>
+
+        <div class="mk-sum">
+          <div><span>Prestation</span><b>Coaching individuel</b></div>
+          <div><span>Durée</span><b>60 min</b></div>
+          <div><span><span class="num">7</span>Date</span><b>dimanche 15 novembre · 11:00</b></div>
+          <div class="tot"><span>Tarif</span><b>120 TND</b></div>
+        </div>
+
+        <div class="mk-submit"><span class="num">8</span>Confirmer ma demande</div>
+      </div>
+
+      <div>
+        <div class="mk-card">
+          <div class="mk-card-top">
+            <div>
+              <h5>Coaching individuel</h5>
+              <div class="meta">dimanche 15 novembre 2026 · 11:00 · 60 min</div>
+            </div>
+            <span class="st p">En attente</span>
+          </div>
+          <div class="meta" style="margin-top:1mm; font-style:italic;">« Je souhaite travailler sur ma confiance en moi. »</div>
+        </div>
+
+        <div class="mk-card">
+          <div class="mk-card-top">
+            <div>
+              <h5>Gestion du stress</h5>
+              <div class="meta">mardi 3 novembre 2026 · 14:00 · 60 min</div>
+            </div>
+            <span class="st d">Terminé</span>
+          </div>
+          <div class="mk-avis">
+            <span class="stars">★★★★★</span><br>
+            « Un accompagnement bienveillant et très concret. »
+          </div>
+        </div>
+
+        <div class="mk-card" style="margin-bottom:0;">
+          <div class="mk-card-top">
+            <div>
+              <h5>Bilan de vie</h5>
+              <div class="meta">vendredi 6 novembre 2026 · 09:00 · 120 min</div>
+            </div>
+            <span class="st c">Confirmé</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="notes">
+    <div><span class="num">5</span><span>Changer la date déclenche <span class="mono">GET /rendezvous/disponibilites?date=…</span> — un <span class="mono">useEffect</span> avec nettoyage.</span></div>
+    <div><span class="num">6</span><span>Les heures occupées ou passées sont <b>désactivées</b> et barrées : l'erreur est impossible avant l'envoi.</span></div>
+    <div><span class="num">7</span><span>Le récapitulatif est calculé à partir de la prestation choisie dans <span class="mono">serviceSlice</span>.</span></div>
+    <div><span class="num">8</span><span><span class="mono">POST /rendezvous</span> → <span class="mono">addRendezVous</span> + toast. La carte apparaît immédiatement à droite.</span></div>
+  </div>
+
+  <div class="p-foot"><span>Élan — Coach de Vie · MERN</span><span>7 / 8</span></div>
+</section>
+
+<style>
+  /* ---------- maquette admin ---------- */
+  .ad-tabs { display: flex; gap: 4mm; padding: 1.8mm 3mm 0; border-bottom: 1px solid var(--line); background: #fff; font-size: 5.4pt; color: var(--muted); font-weight: 700; }
+  .ad-tab { padding: 1mm 0; border-bottom: 2px solid transparent; }
+  .ad-tab.on { color: var(--green); border-bottom-color: var(--green); }
+
+  .ad-wrap { padding: 3mm; background: var(--cream); }
+  .ad-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2mm; }
+  .ad-stat { background: #fff; border: 1px solid var(--line); border-radius: 2mm; padding: 2mm; }
+  .ad-stat span { font-size: 4pt; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 700; display: block; }
+  .ad-stat b { display: block; font-family: Georgia, serif; font-size: 8.6pt; line-height: 1.15; margin: .5mm 0; }
+  .ad-stat small { font-size: 4pt; color: var(--muted); }
+  .ad-stat.accent { background: var(--green); border-color: var(--green); color: #fff; }
+  .ad-stat.accent span, .ad-stat.accent small { color: #cfdccf; }
+
+  .ad-cols { display: grid; grid-template-columns: .85fr 1.15fr; gap: 2mm; margin-top: 2mm; }
+  .ad-panel { background: #fff; border: 1px solid var(--line); border-radius: 2mm; padding: 2mm; }
+  .ad-panel h6 { font-family: Georgia, serif; font-size: 5.6pt; margin: 0 0 1.5mm; }
+  .ad-bar { display: grid; grid-template-columns: 13mm 1fr 4mm; gap: 1.5mm; align-items: center; font-size: 4.2pt; color: var(--muted); margin-bottom: 1.1mm; }
+  .ad-track { height: 1.3mm; background: var(--sand); border-radius: 9mm; overflow: hidden; }
+  .ad-fill { height: 100%; border-radius: 9mm; }
+
+  .ad-table { width: 100%; border-collapse: collapse; font-size: 4.3pt; }
+  .ad-table th { background: var(--sand); color: var(--green); text-align: left; padding: .8mm 1mm; font-size: 3.8pt; text-transform: uppercase; letter-spacing: .06em; }
+  .ad-table td { padding: .9mm 1mm; border-top: 1px solid var(--line); vertical-align: middle; }
+  .ad-table .sub { color: var(--muted); font-size: 3.8pt; display: block; }
+  .ad-act { display: flex; gap: .8mm; }
+  .ad-b { font-size: 3.6pt; font-weight: 800; padding: .35mm 1.2mm; border-radius: 9mm; white-space: nowrap; }
+  .ad-b.g { background: var(--green); color: #fff; }
+  .ad-b.o { background: #fbf0d8; color: #8a6414; }
+  .ad-b.r { background: #fbe9e5; color: var(--danger); }
+  .ad-b.n { background: #f2ede3; color: #6b7a72; }
+
+  /* ---------- bandeau déploiement ---------- */
+  .dep { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 2mm; align-items: center; margin-top: 4mm; }
+  .dep-card { border: 1px solid var(--line); border-radius: 2.5mm; padding: 2.2mm; background: var(--cream); }
+  .dep-card h6 { font-family: Georgia, serif; font-size: 6.4pt; margin: 0 0 .6mm; }
+  .dep-card p { font-size: 5.2pt; color: var(--muted); }
+  .dep-card .mono { font-size: 4.8pt; color: var(--terra); }
+  .dep-arrow { font-size: 8pt; color: var(--green); font-weight: 700; }
+</style>
+
+<!-- ============================ PAGE 8 — ADMIN + DÉPLOIEMENT ============================ -->
+<section class="page">
+  <div class="p-head"><span>L'application en images</span><span class="p-num">08 / 08</span></div>
+
+  <div class="eyebrow">Panneau d'administration</div>
+  <h2>Piloter le cabinet</h2>
+  <p class="lead" style="margin-top:2mm;">
+    Même application, vue différente : elle n'est rendue que si
+    <span class="mono">user.role === 'admin'</span>, et chaque appel est revérifié côté serveur.
+  </p>
+
+  <div class="mk" style="margin-top:3.5mm;">
+    <div class="mk-top">
+      <span class="mk-dot"></span><span class="mk-dot"></span><span class="mk-dot"></span>
+      <span class="mk-url">localhost:5173 — administration</span>
+    </div>
+
+    <div class="mk-nav">
+      <span class="mk-logo">E</span>
+      <span class="mk-name">Élan <span>Coach de Vie</span></span>
+      <span class="mk-links">
+        <span class="mk-on">Administration</span>
+        <span class="mk-user"><span class="mk-dotg"></span> Amina Ben Salah · admin</span>
+      </span>
+    </div>
+
+    <div class="ad-tabs">
+      <span class="ad-tab on"><span class="num">1</span>Tableau de bord</span>
+      <span class="ad-tab">Rendez-vous</span>
+      <span class="ad-tab"><span class="num">4</span>Prestations</span>
+      <span class="ad-tab">Clients</span>
+    </div>
+
+    <div class="ad-wrap">
+      <div class="ad-stats">
+        <div class="ad-stat">
+          <span>Rendez-vous total</span>
+          <b>5</b>
+          <small>2 en attente</small>
+        </div>
+        <div class="ad-stat">
+          <span>Clients inscrits</span>
+          <b>2</b>
+          <small>5 prestations actives</small>
+        </div>
+        <div class="ad-stat">
+          <span>Séances terminées</span>
+          <b>2</b>
+          <small>1 confirmé à venir</small>
+        </div>
+        <div class="ad-stat accent">
+          <span><span class="num">2</span>Chiffre d'affaires</span>
+          <b>370 TND</b>
+          <small>confirmées + terminées</small>
+        </div>
+      </div>
+
+      <div class="ad-cols">
+        <div class="ad-panel">
+          <h6>Répartition par statut</h6>
+          <div class="ad-bar"><span>En attente</span><div class="ad-track"><div class="ad-fill" style="width:40%;background:var(--gold)"></div></div><span>2</span></div>
+          <div class="ad-bar"><span>Confirmés</span><div class="ad-track"><div class="ad-fill" style="width:20%;background:var(--green2)"></div></div><span>1</span></div>
+          <div class="ad-bar"><span>Terminés</span><div class="ad-track"><div class="ad-fill" style="width:40%;background:var(--ok)"></div></div><span>2</span></div>
+          <div class="ad-bar" style="margin-bottom:0;"><span>Annulés</span><div class="ad-track"><div class="ad-fill" style="width:0%;background:var(--danger)"></div></div><span>0</span></div>
+        </div>
+
+        <div class="ad-panel" style="padding:0;">
+          <table class="ad-table">
+            <tr>
+              <th>Client</th><th>Prestation</th><th>Date</th><th>Statut</th><th>Actions</th>
+            </tr>
+            <tr>
+              <td><b>Aya Ben Amor</b><span class="sub">client@elan.tn</span></td>
+              <td>Coaching individuel</td>
+              <td>15/11 · 11:00</td>
+              <td><span class="st p">En attente</span></td>
+              <td><div class="ad-act"><span class="num">3</span><span class="ad-b g">Confirmer</span><span class="ad-b r">Annuler</span></div></td>
+            </tr>
+            <tr>
+              <td><b>Sami Trabelsi</b><span class="sub">sami@elan.tn</span></td>
+              <td>Coaching de carrière</td>
+              <td>17/11 · 15:00</td>
+              <td><span class="st c">Confirmé</span></td>
+              <td><div class="ad-act"><span class="ad-b o">Terminer</span><span class="ad-b r">Annuler</span></div></td>
+            </tr>
+            <tr>
+              <td><b>Aya Ben Amor</b><span class="sub">client@elan.tn</span></td>
+              <td>Gestion du stress</td>
+              <td>03/11 · 14:00</td>
+              <td><span class="st d">Terminé</span></td>
+              <td><div class="ad-act"><span class="ad-b n">Supprimer</span></div></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="notes">
+    <div><span class="num">1</span><span>Chaque onglet charge ses données : <span class="mono">/rendezvous/stats</span>, <span class="mono">/rendezvous</span>, <span class="mono">/services</span>, <span class="mono">/users</span>.</span></div>
+    <div><span class="num">2</span><span>Le CA additionne les prestations des RDV <b>confirmés</b> et <b>terminés</b> (agrégation côté serveur).</span></div>
+    <div><span class="num">3</span><span>Un bouton = un <span class="mono">PUT /rendezvous/:id { statut }</span>, puis <span class="mono">updateRendezVous</span> met à jour la ligne sans recharger.</span></div>
+    <div><span class="num">4</span><span>L'onglet « Prestations » refuse la suppression d'un service lié : <span class="mono">400</span> + message explicite.</span></div>
+  </div>
+
+  <div class="eyebrow" style="margin-top:5mm;">Déploiement</div>
+  <h3 style="margin-bottom:1mm;">Trois services managés, trois jeux de variables</h3>
+
+  <div class="dep" style="margin-top:3mm;">
+    <div class="dep-card">
+      <h6>Vercel — Front</h6>
+      <p>Build <span class="mono">npm run build</span> → <span class="mono">dist</span></p>
+      <p class="mono">VITE_API_URL</p>
+    </div>
+    <div class="dep-arrow">→</div>
+    <div class="dep-card">
+      <h6>Render — API</h6>
+      <p>Start <span class="mono">npm start</span> (port dynamique)</p>
+      <p class="mono">MONGODB_URI · JWT_SECRET · CLIENT_URL</p>
+    </div>
+    <div class="dep-arrow">→</div>
+    <div class="dep-card">
+      <h6>MongoDB Atlas</h6>
+      <p>Cluster M0 · base <span class="mono">coachDB</span></p>
+      <p class="mono">accès réseau 0.0.0.0/0</p>
+    </div>
+  </div>
+
+  <h3 style="margin:4mm 0 2mm;">Conformité au cahier des charges</h3>
+  <table class="t">
+    <tr><th>Exigence</th><th>Où elle est satisfaite</th><th style="width:14mm;">Statut</th></tr>
+    <tr><td>Au moins 3 modèles Mongoose</td><td><b>4</b> : User, Service, RendezVous, Avis</td><td><span class="badge g">OK</span></td></tr>
+    <tr><td>Relation 1:N avec <span class="mono">ref</span> + <span class="mono">populate()</span></td><td><b>4</b> relations (dont une 1:1)</td><td><span class="badge g">OK</span></td></tr>
+    <tr><td><span class="mono">/api/auth/register</span> et <span class="mono">/login</span></td><td><span class="mono">authRoutes.js</span> + bcrypt (sel 10)</td><td><span class="badge g">OK</span></td></tr>
+    <tr><td>Middleware <span class="mono">protect</span> sur POST / DELETE</td><td>13 routes protégées, <span class="mono">adminOnly</span> sur les écritures</td><td><span class="badge g">OK</span></td></tr>
+    <tr><td>Visiteur en lecture, actions réservées aux connectés</td><td><span class="mono">AuthCard</span> remplace le formulaire de réservation</td><td><span class="badge g">OK</span></td></tr>
+    <tr><td>Panneau d'administration</td><td><span class="mono">components/admin/*</span> — 4 onglets</td><td><span class="badge g">OK</span></td></tr>
+    <tr><td>Déploiement Atlas + Render + Vercel</td><td>Variables séparées, CORS restreint</td><td><span class="badge g">OK</span></td></tr>
+    <tr><td><span class="mono">.gitignore</span> strict, aucun <span class="mono">.env</span> versionné</td><td><span class="mono">.env.example</span> fourni à la place</td><td><span class="badge g">OK</span></td></tr>
+  </table>
+
+  <div class="grid2" style="margin-top:4mm; align-items:start;">
+    <div class="card tint">
+      <h3>Ce qui a été le plus difficile</h3>
+      <p class="card-sub">
+        Le décalage d'un jour sur les dates, résolu en stockant
+        <span class="mono">« AAAA-MM-JJ »</span> ; puis la double réservation,
+        résolue par une revérification serveur.
+      </p>
+    </div>
+    <div class="card dark">
+      <h3>Bilan</h3>
+      <p class="card-sub">
+        4 modèles, 4 relations, 20 routes, 15 composants, 5 slices.
+        Application déployée et testée : un rendez-vous créé depuis Vercel
+        apparaît dans le tableau de bord Render.
+      </p>
+    </div>
+  </div>
+
+  <div class="p-foot"><span>Élan — Coach de Vie · MERN</span><span>8 / 8</span></div>
+</section>
+</body>
+</html>

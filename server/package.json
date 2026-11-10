@@ -1,0 +1,29 @@
+{
+  "name": "coach-rendez-vous-server",
+  "version": "1.0.0",
+  "description": "API REST de gestion des rendez-vous d'un coach de vie (MERN - Projet Dr. GUEDDES)",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "seed": "node src/seed/seed.js"
+  },
+  "keywords": [
+    "mern",
+    "express",
+    "mongoose",
+    "jwt",
+    "bcrypt",
+    "rendez-vous"
+  ],
+  "author": "Etudiant - Ecole Polytechnique de Sousse",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^8.9.5"
+  }
+}
